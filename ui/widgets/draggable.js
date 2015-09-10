@@ -59,6 +59,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 		scroll: true,
 		scrollSensitivity: 20,
 		scrollSpeed: 20,
+		scrollContainer: "parent",
 		scrollInterval: 50,
 		snap: false,
 		snapMode: "both",
@@ -924,7 +925,19 @@ $.ui.plugin.add("draggable", "opacity", {
 $.ui.plugin.add("draggable", "scroll", {
 	start: function( event, ui, i ) {
 		if ( !i.scrollParentNotHidden ) {
-			i.scrollParentNotHidden = i.helper.scrollParent( false );
+
+			if(o.scrollContainer === "parent") {
+				i.scrollParentNotHidden = i.helper.scrollParent( false );
+			}
+
+			if(o.scrollContainer === "document" || o.scrollContainer === "window") {
+				i.scrollParentNotHidden = i.document;
+			}
+
+			if(!(/^(document|window|parent)$/).test(o.scrollContainer)) {
+				i.scrollParentNotHidden = $(o.scrollContainer);
+			}
+
 		}
 
 		if ( i.scrollParentNotHidden[ 0 ] !== i.document[ 0 ] && i.scrollParentNotHidden[ 0 ].tagName !== "HTML" ) {
